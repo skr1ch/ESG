@@ -6,8 +6,8 @@
   <a class="back" href="/">All plants</a>
   <h1>{{ plant.name }}</h1>
   <p class="answer">{{ plant.plant_type }}{{ ' plant' if plant.has_kiln }} in {{ plant.town }}, {{ plant.state }}.
-  {% if stake and stake.downstream_ids %}It also supplies clinker to {% for u, mt in feeds %}{{ u.town }}{{ ' and ' if not loop.last }}{% endfor %}, so <b>{{ stake.total_cr|cr }}</b> of revenue ({{ stake.share_of_group|pct(1) }} of the group) depends on this kiln.
-  {% elif fed_by %}It has no kiln and runs on clinker from {% for u, share in fed_by %}{{ u.town }}{{ ' and ' if not loop.last }}{% endfor %}, so a stoppage there stops this unit too.
+  {% if stake and stake.downstream_ids %}It also supplies clinker to {{ feeds|map('first')|map(attribute='town')|listing }}, so <b>{{ stake.total_cr|cr }}</b> of revenue ({{ stake.share_of_group|pct(1) }} of the group) depends on this kiln.
+  {% elif fed_by %}It has no kiln and runs on clinker from {{ fed_by|map('first')|map(attribute='town')|listing }}, so a stoppage there stops this unit too.
   {% else %}It makes and uses its own clinker.{% endif %}</p>
 </div>
 
@@ -23,19 +23,19 @@
 {% if plant.notes %}<p class="small">Plant file note: {{ plant.notes }}</p>{% endif %}
 
 <h2><span>Extreme heat</span></h2>
-<p class="lede">Days a year with a maximum of {{ heat_threshold }} °C or more, the weather service's heat-wave threshold for {{ 'coastal stations' if plant.coastal else 'the plains' }}. Rated <b>{{ readings.heat['today'].label|lower }}</b> today and <b>{{ readings.heat['2040'].label|lower }}</b> in 2040.</p>
+<p class="lede">Days a year with a maximum of {{ heat_threshold }} °C or more, the weather service's heat-wave threshold for {{ 'coastal stations' if plant.coastal else 'the plains' }}. {{ m.rated(readings.heat['today'], readings.heat['2040']) }}</p>
 {{ m.plot(plots.heat, 'Hot days a year, today and 2040, with the range across climate models') }}
 <p class="small">Dot: middle of the climate models. Line: lowest to highest model. Dashed lines: band edges.</p>
 <div class="tags">{{ m.hz_src('heat') }} {{ m.asm('A03' if not plant.coastal else 'A04') }} {{ m.asm('A05') }} {{ m.asm('A01') }} {{ m.asm('A02') }}</div>
 
 <h2><span>Heavy rain</span></h2>
-<p class="lede">Days a year with {{ assumptions.A06.value }} mm or more. Rated <b>{{ readings.rain['today'].label|lower }}</b> today and <b>{{ readings.rain['2040'].label|lower }}</b> in 2040. The wettest day of an average year goes from {{ rx['today'].median|num }} mm to {{ rx['2040'].median|num }} mm ({{ '%+.0f'|format(rx_change * 100) }}%).</p>
+<p class="lede">Days a year with {{ assumptions.A06.value }} mm of rain or more. {{ m.rated(readings.rain['today'], readings.rain['2040']) }} The wettest day of an average year goes from {{ rx['today'].median|num }} mm to {{ rx['2040'].median|num }} mm ({{ '%+.0f'|format(rx_change * 100) }}%).</p>
 {{ m.plot(plots.rain, 'Heavy-rain days a year, today and 2040, with the range across climate models') }}
 <p class="small">Climate models average rain over a grid cell, so they understate downpours at a single site. Read the change, not the absolute count. This is not a flood map.</p>
 <div class="tags">{{ m.hz_src('rain') }} {{ m.asm('A06') }} {{ m.asm('A07') }}</div>
 
 <h2><span>Water stress</span></h2>
-<p class="lede">Rated <b>{{ readings.water['today'].label|lower }}</b> today and <b>{{ readings.water['2040'].label|lower }}</b> in 2040.{% if readings.water['today'].note %} {{ readings.water['today'].note }}.{% endif %}</p>
+<p class="lede">{{ m.rated(readings.water['today'], readings.water['2040']) }}{% if readings.water['today'].note %} {{ readings.water['today'].note }}.{% endif %}</p>
 <div class="scroll">
 <table class="stack" style="max-width:720px">
   <thead><tr><th scope="col">Local basin, Aqueduct</th><th scope="col">Baseline</th><th scope="col">2030</th><th scope="col">2050</th></tr></thead>
@@ -51,7 +51,7 @@
 <div class="two">
   <div>
     <p>Reported Scope 1: <b>{{ emissions.reported_kt|num }} kt CO2</b>.{% if plant.clinker_shipped_mt > 0 %} That includes {{ plant.clinker_shipped_mt|num(2) }} Mt of clinker shipped to other units.{% endif %}</p>
-    <p>After moving shipped-clinker emissions to the plant that grinds it: <b>{{ emissions.allocated_kt|num }} kt</b>, or <b>{{ emissions.allocated_kg_per_t|num }} kg per tonne of cement</b>.</p>
+    <p>After moving the emissions of shipped clinker to the plant that grinds it: <b>{{ emissions.allocated_kt|num }} kt</b>, or <b>{{ emissions.allocated_kg_per_t|num }} kg per tonne of cement</b>.</p>
   </div>
   <div>
     <p>Clinker per tonne of cement: <b>{{ emissions.clinker_factor|num(2) }}</b>.</p>

@@ -44,9 +44,34 @@ def _num(v: float, digits: int = 0) -> str:
     return f"{v:,.{digits}f}"
 
 
+_NUMBER_WORDS = ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+_MONTHS = ("January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+           "November", "December")
+
+
+def _words(n: int) -> str:
+    """Counts under ten as a word, for running text: 'two kilns', but '12 plants'."""
+    return _NUMBER_WORDS[n] if 0 <= n < len(_NUMBER_WORDS) else f"{n:,}"
+
+
+def _listing(items) -> str:
+    """'A', 'A and B', 'A, B and C'."""
+    items = [str(i) for i in items]
+    return " and ".join(items) if len(items) < 3 else f"{', '.join(items[:-1])} and {items[-1]}"
+
+
+def _day(iso: str) -> str:
+    """'2026-11-20' or '2026-11-20T08:22:11Z' as '20 November 2026'. Anything else is shown as it is."""
+    try:
+        year, month, day = (int(part) for part in str(iso)[:10].split("-"))
+        return f"{day} {_MONTHS[month - 1]} {year}"
+    except (ValueError, IndexError):
+        return str(iso)
+
+
 env = Environment(loader=FileSystemLoader(str(TEMPLATES)), autoescape=select_autoescape(["html"]),
                   undefined=StrictUndefined, trim_blocks=True, lstrip_blocks=True)
-env.filters.update(cr=_cr, pct=_pct, num=_num)
+env.filters.update(cr=_cr, pct=_pct, num=_num, words=_words, listing=_listing, day=_day)
 
 
 def _base(ds: data.Dataset, active: str) -> dict:

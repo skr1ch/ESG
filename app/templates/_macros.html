@@ -17,7 +17,15 @@
 {# today -> 2040 as two swatches; the 2040 label is written out, the earlier band only when it differs #}
 {% macro pair(t0, t1) %}
 <span class="pair" title="Today: {{ t0.label }}. 2040: {{ t1.label }}.">{{ sw(t0.band) }}<span class="to" aria-hidden="true">›</span>{{ sw(t1.band) }}<span class="lbl">{{ t1.label }}</span></span>
-{% if t0.band != t1.band %}<span class="was">today {{ t0.label|lower }}</span>{% endif %}
+{% if t0.band != t1.band %}<span class="was">Today: {{ t0.label }}</span>{% endif %}
+{% endmacro %}
+
+{# One sentence for a plant's rating. Band names keep their capital wherever they name a rating. #}
+{% macro rated(t0, t1) %}
+{% if t0.band is none and t1.band is none %}<b>Not rated</b> today or in 2040.
+{%- elif t0.band == t1.band %}Rated <b>{{ t0.label }}</b> today and in 2040.
+{%- else %}{{ 'Rated ' if t0.band is not none }}<b>{{ t0.label }}</b> today and {{ 'rated ' if t0.band is none }}<b>{{ t1.label if t1.band is not none else 'not rated' }}</b> in 2040.
+{%- endif %}
 {% endmacro %}
 
 {% macro legend() %}

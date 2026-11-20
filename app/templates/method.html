@@ -14,9 +14,9 @@
   <tbody>
     <tr><td><b>Plant file</b></td><td data-label="Status"><div>{{ m.src('Loaded') }}</div></td><td data-label="Detail">{{ group.plants }} plants, FY2025-26. Revenue {{ group.revenue_cr|cr }}, Scope 1 {{ group.scope1_kt|num }} kt CO2.</td></tr>
     <tr><td><b>Climate projections</b></td><td data-label="Status"><div>{% if climate_status == 'real' %}{{ m.src('Loaded') }}{% else %}{{ m.sample() }}{% endif %}</div></td>
-      <td data-label="Detail"><div>{% if climate_status == 'real' %}{{ meta.source }}. Models: {{ meta.models|join(', ') }}. {{ meta.scenario }}. Built {{ meta.generated_at }}.{% else %}Placeholder values typed by hand. Run <code>python -m pipeline.fetch_climate</code> then <code>python -m pipeline.build_hazards</code>.{% endif %}</div></td></tr>
+      <td data-label="Detail"><div>{% if climate_status == 'real' %}{{ meta.source }}. Models: {{ meta.models|join(', ') }}. {{ meta.scenario }}. Built on {{ meta.generated_at|day }}.{% else %}Placeholder values typed by hand. Run <code>python -m pipeline.fetch_climate</code> then <code>python -m pipeline.build_hazards</code>.{% endif %}</div></td></tr>
     <tr><td><b>Water stress</b></td><td data-label="Status"><div>{% if water_status == 'real' %}{{ m.src('Loaded') }}{% else %}{{ m.sample() }}{% endif %}</div></td>
-      <td data-label="Detail"><div>{% if water_status == 'real' %}WRI Aqueduct 4.0, looked up {{ aqueduct_dates|join(', ') }}.{% else %}Placeholder categories. Replace <code>data/manual/aqueduct_plants.csv</code> with values from the Aqueduct Water Risk Atlas.{% endif %}</div></td></tr>
+      <td data-label="Detail"><div>{% if water_status == 'real' %}WRI Aqueduct 4.0, looked up on {{ aqueduct_dates|map('day')|listing }}.{% else %}Placeholder categories. Replace <code>data/manual/aqueduct_plants.csv</code> with values from the Aqueduct Water Risk Atlas.{% endif %}</div></td></tr>
   </tbody>
 </table>
 </div>
@@ -24,8 +24,8 @@
 <h2><span>How exposure is counted</span></h2>
 <div class="two">
   <div>
-    <p><b>1. Rate each plant.</b> Each hazard indicator is placed in one of five bands, low to extremely high, for today and for 2040.</p>
-    <p><b>2. Count revenue.</b> Revenue at plants rated high or worse is exposed.</p>
+    <p><b>1. Rate each plant.</b> Each hazard indicator is placed in one of {{ band_labels|length|words }} bands, from {{ band_labels|first }} to {{ band_labels|last }}, for today and for 2040.</p>
+    <p><b>2. Count revenue.</b> Revenue at plants rated {{ band_labels[assumptions.A10.value] }} or worse is exposed.</p>
   </div>
   <div>
     <p><b>3. Follow the clinker.</b> A grinding unit fed by an exposed kiln is exposed too, in proportion to the clinker it takes.</p>
@@ -38,13 +38,13 @@
 <p class="lede">Dashed tags across the site link here. "Published rule" means the number comes from a named authority. "Our assumption" means it is a judgement to challenge.</p>
 <div class="scroll">
 <table class="stack">
-  <thead><tr><th scope="col">Id</th><th scope="col">What</th><th scope="col">Value</th><th scope="col">Basis</th><th scope="col">Why</th></tr></thead>
+  <thead><tr><th scope="col">ID</th><th scope="col">What</th><th scope="col">Value</th><th scope="col">Basis</th><th scope="col">Why</th></tr></thead>
   <tbody>
   {% for id, a in assumptions.items() %}
     <tr id="{{ id }}">
       <td><b class="aid">{{ id }}</b></td>
       <td data-label="What">{{ a.name }}</td>
-      <td data-label="Value"><div>{% if a.value is mapping %}{% for k, v in a.value.items() %}{{ k }}: {{ v }}{{ ', ' if not loop.last }}{% endfor %}{% elif a.value is iterable and a.value is not string %}{{ a.value|join(', ') }}{% else %}{{ a.value }}{% endif %}<span class="sub">{{ a.unit }}</span></div></td>
+      <td data-label="Value"><div>{% if a.value is mapping %}{% for k, v in a.value.items() %}{{ k|capitalize }}: {{ v }}{{ ', ' if not loop.last }}{% endfor %}{% elif a.value is iterable and a.value is not string %}{{ a.value|join(', ') }}{% else %}{{ a.value }}{% endif %}{% if a.unit != '-' %}<span class="sub">{{ a.unit }}</span>{% endif %}</div></td>
       <td data-label="Basis"><div>{{ 'Published rule' if a.kind == 'sourced' else 'Our assumption' }}{% if a.source is defined and a.source %}<span class="sub">{{ a.source }}</span>{% endif %}</div></td>
       <td data-label="Why">{{ a.rationale }}</td>
     </tr>

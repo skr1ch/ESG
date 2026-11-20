@@ -3,7 +3,7 @@
 {% block main %}
 <div class="head head-plain">
   <h1>{{ what }} is not in this register</h1>
-  <p class="answer">The register covers nine plants. Pick one, or go back to the <a href="/">overview</a>.</p>
+  <p class="answer">The register covers {{ all_plants|length|words }} plants. Pick one, or go back to the <a href="/">overview</a>.</p>
 </div>
 <ul class="others" style="margin-top:28px">{% for p in all_plants %}<li><a href="/plants/{{ p.id }}">{{ p.town }} ({{ p.id }})</a></li>{% endfor %}</ul>
 {% endblock %}

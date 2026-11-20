@@ -4,31 +4,31 @@
 version: 1
 assumptions:
   A01:
-    name: "Climate window for 'today'"
+    name: 'Climate window for "today"'
     value: [2006, 2025]
     unit: years
     kind: assumption
     used_in: physical
-    rationale: "A 20-year average smooths single hot or wet years. 2006-2025 is the most recent 20 years."
+    rationale: "A 20-year average smooths out single hot or wet years. The most recent 20 years are 2006 to 2025."
   A02:
-    name: "Climate window for '2040'"
+    name: 'Climate window for "2040"'
     value: [2030, 2049]
     unit: years
     kind: assumption
     used_in: physical
-    rationale: "20 years centred on 2040. The Open-Meteo Climate API stops at 2050-01-01, so 2049 is the last full year."
+    rationale: "Twenty years centred on 2040. The Open-Meteo Climate API stops at 2050-01-01, so 2049 is the last full year."
   A03:
     name: "Hot-day threshold, inland plants"
     value: 40
-    unit: "deg C daily maximum"
+    unit: "°C daily maximum"
     kind: sourced
     used_in: physical
-    source: "India Meteorological Department heat-wave criterion for plains"
+    source: "India Meteorological Department heat-wave criterion for the plains"
     rationale: "Uses the national weather service's own definition so the number is recognisable to an Indian board."
   A04:
     name: "Hot-day threshold, coastal plants"
     value: 37
-    unit: "deg C daily maximum"
+    unit: "°C daily maximum"
     kind: sourced
     used_in: physical
     source: "India Meteorological Department heat-wave criterion for coastal stations"
@@ -46,7 +46,7 @@ assumptions:
     unit: "mm in 24 hours"
     kind: sourced
     used_in: physical
-    source: "India Meteorological Department 'heavy rainfall' category (64.5-115.5 mm)"
+    source: 'India Meteorological Department "heavy rainfall" category (64.5 to 115.5 mm)'
     rationale: "National definition. Climate-model grid cells understate point rainfall, so this is a proxy for flood-prone days, not a flood model."
   A07:
     name: "Heavy-rain bands (heavy-rain days a year)"
@@ -57,7 +57,7 @@ assumptions:
     rationale: "Band edges are ours. They rank plants against each other; they do not predict inundation."
   A08:
     name: "Water stress in 2040"
-    value: "worse of 2030 and 2050"
+    value: "Worse of 2030 and 2050"
     unit: "Aqueduct category"
     kind: assumption
     used_in: physical
@@ -70,7 +70,7 @@ assumptions:
     used_in: physical
     rationale: "A plant on desalinated seawater does not draw on the stressed basin, so it is rated Low. Its exposure moves to energy cost, which v1 does not model."
   A10:
-    name: "Band counted as 'exposed'"
+    name: 'Band counted as "exposed"'
     value: 3
     unit: "band (High or worse)"
     kind: assumption
@@ -89,7 +89,7 @@ assumptions:
     unit: "fraction per year"
     kind: assumption
     used_in: transition
-    rationale: "Plant-level targets exist only for real obligated entities. 2% a year is a placeholder trajectory; replace with the notified targets."
+    rationale: "Plant-level targets exist only for real obligated entities. Tightening by 2% a year is a placeholder trajectory; replace it with the notified targets."
   A13:
     name: "No abatement"
     value: "FY2025-26 intensity held to 2040"
@@ -100,21 +100,21 @@ assumptions:
   A14:
     name: "Carbon price today"
     value: 600
-    unit: "INR per tonne CO2"
+    unit: "₹ per tonne of CO2"
     kind: assumption
     used_in: transition
-    source: "Midpoint of published pre-launch estimates of Rs 400-900 for the first CCTS cycle"
-    rationale: "No Carbon Credit Certificate had traded when this was built (checked October 2026 sources)."
+    source: "Midpoint of published pre-launch estimates of ₹400 to ₹900 for the first CCTS cycle"
+    rationale: "No Carbon Credit Certificate had traded when this was built (sources checked in October 2026)."
   A15:
     name: "Carbon price paths for 2040"
     value: {low: 1000, central: 2500, high: 5000}
-    unit: "INR per tonne CO2"
+    unit: "₹ per tonne of CO2"
     kind: assumption
     used_in: transition
     rationale: "Illustrative. NGFS scenario prices need a registered account; replace these once pulled."
   A16:
     name: "Emissions carried by shipped clinker"
-    value: "source plant's average kg CO2 per tonne of clinker"
+    value: "Source plant's average kg CO2 per tonne of clinker"
     unit: "-"
     kind: assumption
     used_in: transition

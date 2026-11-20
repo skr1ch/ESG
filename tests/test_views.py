@@ -98,6 +98,19 @@ def test_health_reports_data_status():
     assert h["ok"] and h["plants"] == 9 and h["climate_data"] in ("real", "sample")
 
 
+def test_copy_helpers_spell_counts_join_lists_and_write_dates():
+    assert views._words(2) == "two" and views._words(12) == "12"
+    assert views._listing(["P08"]) == "P08" and views._listing(["P08", "P09"]) == "P08 and P09"
+    assert views._listing(["a", "b", "c"]) == "a, b and c"
+    assert views._day("2026-11-20T08:22:11Z") == "20 November 2026" and views._day("soon") == "soon"
+
+
+def test_band_names_keep_their_capital_in_running_text(rendered):
+    text = re.sub(r"\s+", " ", " ".join(visible_text(html) for html in rendered.values()))
+    assert "rated High or worse" in text
+    assert not re.search(r"[Rr]ated (low|medium|high|extremely)", text)
+
+
 def test_range_plot_geometry_stays_inside_the_canvas():
     class R:
         def __init__(self, v, lo, hi):
