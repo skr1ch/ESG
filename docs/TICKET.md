@@ -16,7 +16,7 @@ It shows exposure. It does not predict losses.
 1. **Data contract.** Load and validate `plants.csv`, `clinker_flows.csv`, `assumptions.yaml`. Bad input fails with the file, row and reason (`tests/test_data_contract.py`).
 2. **Clinker network** (`app/core/network.py`). Move shipped-clinker emissions to the unit that grinds it. Must reproduce: allocated total 10,932 kt; Baloda Bazar 557 kg CO2/t cement; Chittorgarh plus Baloda Bazar carry 52.1% of revenue.
 3. **Climate pipeline** (`pipeline/`). Per plant and model: daily maximum temperature and rainfall, 2006-2049. Indicators: hot days (40 °C inland, 37 °C coastal), heavy-rain days (64.5 mm), mean wettest day. Store median, minimum and maximum across at least three models for 2006-2025 and 2030-2049.
-4. **Water stress.** Replace the hand-filled CSV with a point-in-basin lookup on the Aqueduct 4.0 file: baseline, 2030 and 2050 business-as-usual categories.
+4. **Water stress.** Replace the manual CSV with a point-in-basin lookup on the Aqueduct 4.0 file: baseline, 2030 and 2050 business-as-usual categories.
 5. **Exposure and pages** (`app/core/physical.py`, `app/templates/`): overview, plant, method.
 6. **Carbon cost** (`app/core/transition.py`): allocated emissions × gap to target × price.
 

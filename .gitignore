@@ -8,3 +8,7 @@ dist/
 .env
 # Raw climate downloads are large and reproducible; the derived file is committed.
 data/raw/open_meteo/
+# Agent tooling and design-skill scratch files; not part of the product.
+.claude/
+.agents/
+.impeccable/

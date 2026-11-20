@@ -34,7 +34,7 @@ Any dataset still on sample values is flagged on every page, and `scripts/verify
 
 ## How I used AI
 
-**Tools.** Claude and Gemini, working as coding agents with web search: research, architecture, core business logic, Jinja templates, 92 test cases, and drafts of the ticket and process note. I paired them with local Python REPL runs to independently verify calculations.
+**Tools.** Claude and Gemini, working as coding agents with web search: research, architecture, core business logic, Jinja templates, 100 test cases, and drafts of the ticket and process note. I paired them with local Python REPL runs to independently verify calculations.
 
 **How.** It planned first, then built in sprints. Each ended with a script that recomputes totals from the plant file, audits every page and lists the steps only I can do.
 

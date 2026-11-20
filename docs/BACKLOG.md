@@ -12,11 +12,15 @@
 |---|---|---|---|
 | 0 | Something loads | Repo layout; data contract; assumptions file; labelled sample hazard data | Done |
 | 1 | The numbers are right | S1 clinker network and allocation; S2 hazard bands and exposure; S3 carbon cost | Done, 50 tests |
-| 2 | Real data can flow | S4 resumable fetcher; S5 indicators; S6 hazards builder | Done in code; run pending (gate G1) |
+| 2 | Real data can flow | S4 resumable fetcher; S5 indicators; S6 hazards builder | Done; run on 20 November 2026 (gate G1 closed) |
 | 3 | Meera can read it | S7 overview; S8 plant page; S9 carbon page; S10 method page; S11 provenance tags | Done |
 | 4 | It checks itself | S12 `verify.py`; S13 checklist; fix cycle | Done |
-| 5 | An engineer can build it | S14 ticket; S15 process note | Drafted; note needs owner's words (gate G4) |
-| 6 | It is live | S16 real data; S17 Aqueduct lookups; S18 Vercel deploy | Waiting on owner (gates G1, G2, G3, G5) |
+| 5 | An engineer can build it | S14 ticket; S15 process note | Done (gate G4 closed) |
+| 6 | It is live | S16 real data; S17 Aqueduct lookups; S18 Vercel deploy | S16 and S17 done (gates G1, G2, G3 closed); S18 waiting on owner (gate G5) |
+| 7 | It looks like what it is | S19 redesign: a new look and layout, with every figure, statement, tag and URL kept | Done |
+| 8 | It reads cleanly | S20 grammar and capitalisation pass on every page; S21 docs brought in line with the build | Done, 100 tests |
+
+**Where it stands on 20 November 2026.** Build checks all pass and both hazard datasets are real. The one open item is S18: deploy to Vercel and close gate G5.
 
 ## Stories and acceptance criteria
 
@@ -28,6 +32,8 @@
 - **S8** As Meera, I want to see the spread between models. *Median dot, minimum-to-maximum whisker, band edges drawn.*
 - **S11** As an auditor, I want to know which numbers are assumptions. *Every assumption id appears beside a figure and links to its row.*
 - **S12** As the owner, I want one command that tells me what is left. *Build checks and release gates listed by id.*
+- **S19** As a board member, I want the register to read on a projector, on a phone and on paper. *Reads at 400 px wide; prints on A4 with the band colours kept; no JavaScript.*
+- **S20** As a reader, I want band names to look like names. *"Rated High or worse", never "rated high or worse"; a test fails on a lower-case band name.*
 
 ## Retro: what the loops caught
 
@@ -39,11 +45,15 @@
 | 3 | Screenshot review | Duplicate "Sample data" tags; "Integrated in Baloda Bazar" read oddly; tables squeezed on a phone | All three fixed |
 | 4 | `verify.py` A1 | Assumption A14 was never shown beside a figure: the FY2026-27 carbon page was not in the audited set | Page added to the freeze and audit |
 | 4 | `verify.py` G4 | Gate passed vacuously when the note did not exist | Gate now requires the file |
+| 6 | First real fetch | The run stopped at download 22 of 36. Each download weighs about 230 against the free tier's 5,000 an hour, so the default pace could never finish in one go | Fetcher paces to two a minute and waits out the hourly limit; six tests added |
+| 6 | Cross-check against WRI's service | The water file was marked real but still held the placeholder categories; 7 of 9 plants differed from Aqueduct | Replaced with WRI's values; gate G2 now stays open while "real" rows equal the placeholders |
+| 6 | First look at real output | The heat and heavy-rain band edges (A05, A07) had been chosen before any real output existed | Edges reset against the spread across the nine plants: 10, 25, 45, 70 hot days and 0.5, 1, 2, 4 heavy-rain days; test fixtures pin the earlier edges |
+| 8 | Proofreading the rendered pages | Band names were lower-case in sentences but capitalised in the assumptions; "2 kilns" opened a sentence; lists read "P08, P09"; the Method page showed "deg C", "INR" and a raw timestamp | All fixed; two tests added |
 
 ## Next up (not in v1)
 
 1. Cyclone and storm-surge layer for Mundra and Paradip.
 2. Notified CCTS targets and Scope 2, replacing A12.
-3. Aqueduct point-in-basin lookup in the pipeline, replacing the hand-filled CSV.
+3. Aqueduct point-in-basin lookup in the pipeline, replacing the manual CSV.
 4. Humid-heat indicator (wet-bulb) for coastal and eastern plants.
 5. Clinker stock days per grinding unit, replacing A11.
