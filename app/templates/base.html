@@ -7,13 +7,15 @@
 <meta name="description" content="Where Nimbus Cement's revenue sits against extreme heat, heavy rain, water stress and a carbon price, today and in 2040.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23172048'/%3E%3Crect x='3' y='9' width='10' height='3' fill='%232c7a4b'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wdth,wght@75..125,100..800&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%232430b8'/%3E%3Ccircle cx='8' cy='8' r='5' fill='%23fbfcfa'/%3E%3Ccircle cx='8' cy='8' r='2.4' fill='%23e8471c'/%3E%3C/svg%3E">
 <style>
 {% include "_styles.css" %}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to the register</a>
+<div class="seam" aria-hidden="true"></div>
 <header class="mast">
   <div class="wrap">
     <a class="brand" href="/">Nimbus Cement <span>climate exposure register</span></a>
@@ -31,7 +33,7 @@
   are placeholders until the data pipeline has been run. Plant, revenue and emissions figures come from the Nimbus plant file. <a href="/method#data">See data status</a></div>
 </div>
 {% endif %}
-<main class="wrap">
+<main class="wrap" id="main">
 {% block main %}{% endblock %}
 </main>
 <footer class="foot">

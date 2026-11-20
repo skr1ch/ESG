@@ -3,5 +3,7 @@ docs/
 dist/
 data/raw/
 .github/
+.claude/
+.agents/
 .pytest_cache/
 requirements-dev.txt

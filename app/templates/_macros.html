@@ -23,12 +23,14 @@
 {% macro legend() %}
 <ul class="legend" aria-label="Hazard bands, lowest to highest">
   {% for l in band_labels %}<li>{{ sw(loop.index0) }}{{ l }}</li>{% endfor %}
+  <li class="note">Hatched bands are the ones counted as exposed.</li>
 </ul>
 {% endmacro %}
 
 {% macro plot(p, label) %}
 <svg class="plot" viewBox="0 0 {{ p.width }} {{ p.height }}" role="img" aria-label="{{ label }}">
   <line class="axis" x1="{{ p.x0 }}" x2="{{ p.x1 }}" y1="84" y2="84"/>
+  <line class="axis" x1="{{ p.x0 }}" x2="{{ p.x0 }}" y1="12" y2="84"/>
   <text x="{{ p.x0 }}" y="102" text-anchor="middle">0</text>
   <text x="{{ p.x1 }}" y="102" text-anchor="middle">{{ p.axis_max_label }}</text>
   {% for e in p.edges %}
