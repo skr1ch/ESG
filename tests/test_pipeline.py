@@ -1,6 +1,8 @@
 """Pipeline logic on synthetic series (the real API is not called in tests)."""
 import datetime as dt
+import io
 import json
+import urllib.error
 
 import pytest
 
@@ -61,6 +63,68 @@ def test_url_requests_the_planned_window():
     url = fetch_climate.build_url(24.8887, 74.6269, "MRI_AGCM3_2_S")
     assert url.startswith("https://climate-api.open-meteo.com/v1/climate?")
     assert "start_date=2006-01-01" in url and "end_date=2049-12-31" in url and "models=MRI_AGCM3_2_S" in url
+
+
+def _limit(which):
+    body = json.dumps({"error": True, "reason": f"{which} API request limit exceeded."}).encode()
+    return urllib.error.HTTPError("https://example.invalid", 429, "Too Many Requests", {}, io.BytesIO(body))
+
+
+def _api(monkeypatch, replies):
+    """Make urlopen raise or return each reply in turn, and collect the waits fetch() asks for."""
+    queue, waits = list(replies), []
+
+    def urlopen(req, timeout=None):
+        reply = queue.pop(0)
+        if isinstance(reply, Exception):
+            raise reply
+        return io.BytesIO(json.dumps(reply).encode())
+
+    monkeypatch.setattr(fetch_climate.urllib.request, "urlopen", urlopen)
+    return waits
+
+
+def test_limit_kind_reads_the_limit_named_in_the_message():
+    assert fetch_climate.limit_kind('{"reason":"Hourly API request limit exceeded."}') == "hourly"
+    assert fetch_climate.limit_kind('{"reason":"Daily API request limit exceeded."}') == "daily"
+    assert fetch_climate.limit_kind('{"reason":"Minutely API request limit exceeded."}') == "minutely"
+    assert fetch_climate.limit_kind("") == "minutely"   # an unnamed 429 gets the short wait
+
+
+def test_fetch_waits_out_the_minute_and_hour_limits(monkeypatch):
+    waits = _api(monkeypatch, [_limit("Minutely"), _limit("Hourly"), _limit("Hourly"), {"daily": {}}])
+    assert fetch_climate.fetch("https://example.invalid", sleep=waits.append) == {"daily": {}}
+    assert waits == [65, 600, 600]
+
+
+def test_fetch_stops_at_once_on_the_daily_limit(monkeypatch):
+    waits = _api(monkeypatch, [_limit("Daily")])
+    with pytest.raises(RuntimeError, match="Daily"):
+        fetch_climate.fetch("https://example.invalid", sleep=waits.append)
+    assert waits == []
+
+
+def test_fetch_gives_up_when_a_limit_never_clears(monkeypatch):
+    waits = _api(monkeypatch, [_limit("Hourly") for _ in range(8)])   # a fresh reply each time: a body reads once
+    with pytest.raises(RuntimeError, match="HTTP 429"):
+        fetch_climate.fetch("https://example.invalid", sleep=waits.append)
+    assert waits == [600] * 7   # 70 minutes: longer than the hourly window
+
+
+def test_fetch_retries_a_timeout_then_reports_it(monkeypatch):
+    waits = _api(monkeypatch, [TimeoutError("timed out")] * 3 + [{"daily": {}}])
+    assert fetch_climate.fetch("https://example.invalid", sleep=waits.append) == {"daily": {}}
+    waits = _api(monkeypatch, [TimeoutError("timed out")] * 4)
+    with pytest.raises(RuntimeError, match="network error: timed out"):
+        fetch_climate.fetch("https://example.invalid", sleep=waits.append)
+    assert waits == [10, 10, 10]
+
+
+def test_default_pace_stays_inside_the_minute_limit():
+    days = (dt.date.fromisoformat(fetch_climate.END) - dt.date.fromisoformat(fetch_climate.START)).days + 1
+    weight = days / 14 * len(fetch_climate.VARIABLES) / 10   # Open-Meteo's published request weight
+    assert weight == pytest.approx(229.6, abs=0.1)           # matches the X-RateLimit-Cost header it returns
+    assert weight * 2 <= 600 < weight * 3                    # so two downloads a minute, never three
 
 
 def _write_model(raw, pid, model, hot_today, hot_2040):

@@ -47,6 +47,9 @@ def main() -> int:
     ap.add_argument("--release", action="store_true", help="fail if any release gate is still open")
     ap.add_argument("--url", help="live deployment to check, e.g. https://nimbus-xyz.vercel.app")
     args = ap.parse_args()
+    for stream in (sys.stdout, sys.stderr):   # the report prints a rupee sign; a piped Windows console is cp1252
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
 
     # ---- T: tests ------------------------------------------------------------------------------
     proc = subprocess.run([sys.executable, "-m", "pytest", "-rs", "-p", "no:cacheprovider"],
@@ -159,9 +162,14 @@ def main() -> int:
     record("G1", ds.climate_status == "real", "Climate data is real model output, not sample",
            "run: python -m pipeline.fetch_climate, then python -m pipeline.build_hazards (needs internet)"
            if ds.climate_status != "real" else f"models: {', '.join(ds.hazards['meta']['models'])}", gate=True)
-    record("G2", ds.water_status == "real", "Water-stress categories come from Aqueduct, not sample",
-           "fill data/manual/aqueduct_plants.csv from the Aqueduct Water Risk Atlas and set status=real"
-           if ds.water_status != "real" else "all rows marked real", gate=True)
+    from pipeline import sample_data
+    relabelled = ds.water_status == "real" and all(   # marked real, yet every category is still the placeholder
+        (r["baseline_cat"], r["bau30_cat"], r["bau50_cat"]) == tuple(sample_data.SAMPLE.get(pid, ())[6:])
+        for pid, r in ds.aqueduct.items())
+    record("G2", ds.water_status == "real" and not relabelled, "Water-stress categories come from Aqueduct, not sample",
+           "rows are marked real but every category still equals the placeholder in pipeline/sample_data.py: look them up"
+           if relabelled else "fill data/manual/aqueduct_plants.csv from the Aqueduct Water Risk Atlas and set status=real"
+           if ds.water_status != "real" else "all rows marked real, and they differ from the placeholders", gate=True)
     record("G3", proc.returncode == 0 and not http_skipped, "HTTP tests ran against FastAPI",
            "skipped here: pip install -r requirements-dev.txt, then re-run" if http_skipped else "ran", gate=True)
     open_notes = [n for n, p in docs.items() if p.exists() and PLACEHOLDER in p.read_text(encoding="utf-8")]

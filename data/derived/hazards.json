@@ -1,10 +1,14 @@
 {
   "meta": {
-    "status": "sample",
-    "note": "Hand-typed placeholder values. Not model output. Run the pipeline to replace.",
-    "source": "none (sample)",
-    "scenario": "n/a",
-    "models": [],
+    "status": "real",
+    "source": "Open-Meteo Climate API (CMIP6 HighResMIP, bias-corrected and downscaled with ERA5-Land)",
+    "scenario": "Single pathway close to RCP8.5; the API offers no other",
+    "models": [
+      "CMCC_CM2_VHR4",
+      "EC_Earth3P_HR",
+      "MPI_ESM1_2_XR",
+      "MRI_AGCM3_2_S"
+    ],
     "windows": {
       "today": [
         2006,
@@ -15,45 +19,52 @@
         2049
       ]
     },
-    "generated_at": "sample"
+    "generated_at": "2026-11-20T08:22:11Z",
+    "licence": "CC BY 4.0 (CMIP6 and Open-Meteo)"
   },
   "plants": {
     "P01": {
       "heat_threshold_c": 40,
       "heat_days": {
         "today": {
-          "median": 55,
-          "min": 46.8,
-          "max": 63.2
+          "median": 44.52,
+          "min": 39.4,
+          "max": 64.9,
+          "n_models": 4
         },
         "2040": {
-          "median": 72,
-          "min": 61.2,
-          "max": 82.8
+          "median": 51.25,
+          "min": 43.85,
+          "max": 65.45,
+          "n_models": 4
         }
       },
       "heavy_rain_days": {
         "today": {
-          "median": 1.2,
-          "min": 0.8,
-          "max": 1.6
+          "median": 0.33,
+          "min": 0.0,
+          "max": 1.25,
+          "n_models": 4
         },
         "2040": {
-          "median": 1.6,
-          "min": 1.1,
-          "max": 2.1
+          "median": 0.5,
+          "min": 0.0,
+          "max": 1.2,
+          "n_models": 4
         }
       },
       "rx1day_mm": {
         "today": {
-          "median": 78,
-          "min": 62.4,
-          "max": 93.6
+          "median": 62.0,
+          "min": 25.84,
+          "max": 110.61,
+          "n_models": 4
         },
         "2040": {
-          "median": 88,
-          "min": 70.4,
-          "max": 105.6
+          "median": 57.96,
+          "min": 27.25,
+          "max": 90.31,
+          "n_models": 4
         }
       }
     },
@@ -61,38 +72,44 @@
       "heat_threshold_c": 40,
       "heat_days": {
         "today": {
-          "median": 60,
-          "min": 51.0,
-          "max": 69.0
+          "median": 43.48,
+          "min": 40.95,
+          "max": 60.1,
+          "n_models": 4
         },
         "2040": {
-          "median": 78,
-          "min": 66.3,
-          "max": 89.7
+          "median": 46.4,
+          "min": 40.85,
+          "max": 60.55,
+          "n_models": 4
         }
       },
       "heavy_rain_days": {
         "today": {
-          "median": 2.4,
-          "min": 1.7,
-          "max": 3.1
+          "median": 0.5,
+          "min": 0.0,
+          "max": 1.65,
+          "n_models": 4
         },
         "2040": {
-          "median": 3.1,
-          "min": 2.2,
-          "max": 4.0
+          "median": 0.28,
+          "min": 0.0,
+          "max": 2.05,
+          "n_models": 4
         }
       },
       "rx1day_mm": {
         "today": {
-          "median": 96,
-          "min": 76.8,
-          "max": 115.2
+          "median": 75.74,
+          "min": 35.88,
+          "max": 106.42,
+          "n_models": 4
         },
         "2040": {
-          "median": 108,
-          "min": 86.4,
-          "max": 129.6
+          "median": 62.85,
+          "min": 34.0,
+          "max": 194.37,
+          "n_models": 4
         }
       }
     },
@@ -100,38 +117,44 @@
       "heat_threshold_c": 40,
       "heat_days": {
         "today": {
-          "median": 75,
-          "min": 63.8,
-          "max": 86.2
+          "median": 59.75,
+          "min": 46.95,
+          "max": 71.65,
+          "n_models": 4
         },
         "2040": {
-          "median": 92,
-          "min": 78.2,
-          "max": 105.8
+          "median": 59.55,
+          "min": 33.5,
+          "max": 72.8,
+          "n_models": 4
         }
       },
       "heavy_rain_days": {
         "today": {
-          "median": 2.8,
-          "min": 2.0,
-          "max": 3.6
+          "median": 1.15,
+          "min": 0.15,
+          "max": 2.15,
+          "n_models": 4
         },
         "2040": {
-          "median": 3.5,
-          "min": 2.4,
-          "max": 4.5
+          "median": 1.42,
+          "min": 0.4,
+          "max": 2.25,
+          "n_models": 4
         }
       },
       "rx1day_mm": {
         "today": {
-          "median": 104,
-          "min": 83.2,
-          "max": 124.8
+          "median": 79.08,
+          "min": 44.52,
+          "max": 145.74,
+          "n_models": 4
         },
         "2040": {
-          "median": 118,
-          "min": 94.4,
-          "max": 141.6
+          "median": 86.74,
+          "min": 59.51,
+          "max": 207.66,
+          "n_models": 4
         }
       }
     },
@@ -139,38 +162,44 @@
       "heat_threshold_c": 40,
       "heat_days": {
         "today": {
-          "median": 50,
-          "min": 42.5,
-          "max": 57.5
+          "median": 43.1,
+          "min": 35.9,
+          "max": 50.6,
+          "n_models": 4
         },
         "2040": {
-          "median": 68,
-          "min": 57.8,
-          "max": 78.2
+          "median": 45.53,
+          "min": 39.45,
+          "max": 59.95,
+          "n_models": 4
         }
       },
       "heavy_rain_days": {
         "today": {
-          "median": 1.5,
-          "min": 1.0,
-          "max": 2.0
+          "median": 0.47,
+          "min": 0.0,
+          "max": 1.0,
+          "n_models": 4
         },
         "2040": {
-          "median": 2.0,
-          "min": 1.4,
-          "max": 2.6
+          "median": 0.78,
+          "min": 0.05,
+          "max": 1.1,
+          "n_models": 4
         }
       },
       "rx1day_mm": {
         "today": {
-          "median": 84,
-          "min": 67.2,
-          "max": 100.8
+          "median": 57.27,
+          "min": 27.51,
+          "max": 114.58,
+          "n_models": 4
         },
         "2040": {
-          "median": 95,
-          "min": 76.0,
-          "max": 114.0
+          "median": 70.97,
+          "min": 31.54,
+          "max": 104.05,
+          "n_models": 4
         }
       }
     },
@@ -178,38 +207,44 @@
       "heat_threshold_c": 40,
       "heat_days": {
         "today": {
-          "median": 28,
-          "min": 23.8,
-          "max": 32.2
+          "median": 27.62,
+          "min": 18.35,
+          "max": 41.75,
+          "n_models": 4
         },
         "2040": {
-          "median": 45,
-          "min": 38.2,
-          "max": 51.7
+          "median": 32.25,
+          "min": 25.9,
+          "max": 51.5,
+          "n_models": 4
         }
       },
       "heavy_rain_days": {
         "today": {
-          "median": 2.0,
-          "min": 1.4,
-          "max": 2.6
+          "median": 0.1,
+          "min": 0.05,
+          "max": 0.6,
+          "n_models": 4
         },
         "2040": {
-          "median": 2.4,
-          "min": 1.7,
-          "max": 3.1
+          "median": 0.5,
+          "min": 0.2,
+          "max": 0.7,
+          "n_models": 4
         }
       },
       "rx1day_mm": {
         "today": {
-          "median": 92,
-          "min": 73.6,
-          "max": 110.4
+          "median": 47.41,
+          "min": 43.53,
+          "max": 80.91,
+          "n_models": 4
         },
         "2040": {
-          "median": 101,
-          "min": 80.8,
-          "max": 121.2
+          "median": 66.1,
+          "min": 46.79,
+          "max": 79.2,
+          "n_models": 4
         }
       }
     },
@@ -217,38 +252,44 @@
       "heat_threshold_c": 40,
       "heat_days": {
         "today": {
-          "median": 62,
-          "min": 52.7,
-          "max": 71.3
+          "median": 50.65,
+          "min": 35.2,
+          "max": 65.95,
+          "n_models": 4
         },
         "2040": {
-          "median": 80,
-          "min": 68.0,
-          "max": 92.0
+          "median": 50.77,
+          "min": 25.7,
+          "max": 62.75,
+          "n_models": 4
         }
       },
       "heavy_rain_days": {
         "today": {
-          "median": 3.2,
-          "min": 2.2,
-          "max": 4.2
+          "median": 0.8,
+          "min": 0.2,
+          "max": 2.7,
+          "n_models": 4
         },
         "2040": {
-          "median": 4.1,
-          "min": 2.9,
-          "max": 5.3
+          "median": 0.98,
+          "min": 0.15,
+          "max": 2.05,
+          "n_models": 4
         }
       },
       "rx1day_mm": {
         "today": {
-          "median": 110,
-          "min": 88.0,
-          "max": 132.0
+          "median": 77.41,
+          "min": 55.47,
+          "max": 124.65,
+          "n_models": 4
         },
         "2040": {
-          "median": 126,
-          "min": 100.8,
-          "max": 151.2
+          "median": 102.18,
+          "min": 52.31,
+          "max": 160.06,
+          "n_models": 4
         }
       }
     },
@@ -256,38 +297,44 @@
       "heat_threshold_c": 37,
       "heat_days": {
         "today": {
-          "median": 40,
-          "min": 34.0,
-          "max": 46.0
+          "median": 40.17,
+          "min": 35.05,
+          "max": 49.9,
+          "n_models": 4
         },
         "2040": {
-          "median": 58,
-          "min": 49.3,
-          "max": 66.7
+          "median": 51.88,
+          "min": 41.65,
+          "max": 64.05,
+          "n_models": 4
         }
       },
       "heavy_rain_days": {
         "today": {
-          "median": 0.8,
-          "min": 0.6,
-          "max": 1.0
+          "median": 0.22,
+          "min": 0.0,
+          "max": 0.5,
+          "n_models": 4
         },
         "2040": {
-          "median": 1.2,
-          "min": 0.8,
-          "max": 1.6
+          "median": 0.5,
+          "min": 0.0,
+          "max": 0.8,
+          "n_models": 4
         }
       },
       "rx1day_mm": {
         "today": {
-          "median": 70,
-          "min": 56.0,
-          "max": 84.0
+          "median": 46.9,
+          "min": 30.71,
+          "max": 69.54,
+          "n_models": 4
         },
         "2040": {
-          "median": 82,
-          "min": 65.6,
-          "max": 98.4
+          "median": 61.94,
+          "min": 33.49,
+          "max": 70.72,
+          "n_models": 4
         }
       }
     },
@@ -295,38 +342,44 @@
       "heat_threshold_c": 37,
       "heat_days": {
         "today": {
-          "median": 12,
-          "min": 10.2,
-          "max": 13.8
+          "median": 12.1,
+          "min": 0.1,
+          "max": 22.6,
+          "n_models": 4
         },
         "2040": {
-          "median": 22,
-          "min": 18.7,
-          "max": 25.3
+          "median": 15.02,
+          "min": 0.05,
+          "max": 24.35,
+          "n_models": 4
         }
       },
       "heavy_rain_days": {
         "today": {
-          "median": 5.5,
-          "min": 3.8,
-          "max": 7.2
+          "median": 2.42,
+          "min": 1.0,
+          "max": 2.7,
+          "n_models": 4
         },
         "2040": {
-          "median": 6.8,
-          "min": 4.8,
-          "max": 8.8
+          "median": 1.45,
+          "min": 1.0,
+          "max": 2.8,
+          "n_models": 4
         }
       },
       "rx1day_mm": {
         "today": {
-          "median": 142,
-          "min": 113.6,
-          "max": 170.4
+          "median": 115.3,
+          "min": 79.78,
+          "max": 162.15,
+          "n_models": 4
         },
         "2040": {
-          "median": 160,
-          "min": 128.0,
-          "max": 192.0
+          "median": 98.67,
+          "min": 89.77,
+          "max": 133.14,
+          "n_models": 4
         }
       }
     },
@@ -334,38 +387,44 @@
       "heat_threshold_c": 40,
       "heat_days": {
         "today": {
-          "median": 25,
-          "min": 21.2,
-          "max": 28.7
+          "median": 23.38,
+          "min": 13.4,
+          "max": 34.3,
+          "n_models": 4
         },
         "2040": {
-          "median": 38,
-          "min": 32.3,
-          "max": 43.7
+          "median": 21.32,
+          "min": 7.05,
+          "max": 44.1,
+          "n_models": 4
         }
       },
       "heavy_rain_days": {
         "today": {
-          "median": 3.4,
-          "min": 2.4,
-          "max": 4.4
+          "median": 0.9,
+          "min": 0.05,
+          "max": 1.65,
+          "n_models": 4
         },
         "2040": {
-          "median": 4.2,
-          "min": 2.9,
-          "max": 5.5
+          "median": 0.9,
+          "min": 0.05,
+          "max": 2.5,
+          "n_models": 4
         }
       },
       "rx1day_mm": {
         "today": {
-          "median": 112,
-          "min": 89.6,
-          "max": 134.4
+          "median": 80.97,
+          "min": 41.73,
+          "max": 119.29,
+          "n_models": 4
         },
         "2040": {
-          "median": 127,
-          "min": 101.6,
-          "max": 152.4
+          "median": 87.7,
+          "min": 44.24,
+          "max": 134.51,
+          "n_models": 4
         }
       }
     }

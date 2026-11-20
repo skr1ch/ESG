@@ -1,10 +1,10 @@
 plant_id,baseline_cat,bau30_cat,bau50_cat,status,source,looked_up_on
-P01,4,4,4,real,WRI Aqueduct 4.0 Water Risk Atlas (Business as usual),2026-11-20
-P02,3,3,4,real,WRI Aqueduct 4.0 Water Risk Atlas (Business as usual),2026-11-20
-P03,2,3,3,real,WRI Aqueduct 4.0 Water Risk Atlas (Business as usual),2026-11-20
-P04,3,4,4,real,WRI Aqueduct 4.0 Water Risk Atlas (Business as usual),2026-11-20
-P05,4,4,4,real,WRI Aqueduct 4.0 Water Risk Atlas (Business as usual),2026-11-20
-P06,2,2,3,real,WRI Aqueduct 4.0 Water Risk Atlas (Business as usual),2026-11-20
-P07,4,4,4,real,WRI Aqueduct 4.0 Water Risk Atlas (Business as usual),2026-11-20
-P08,1,1,2,real,WRI Aqueduct 4.0 Water Risk Atlas (Business as usual),2026-11-20
-P09,2,3,3,real,WRI Aqueduct 4.0 Water Risk Atlas (Business as usual),2026-11-20
+P01,4,4,4,real,WRI Aqueduct 4.0 via the Water Risk Atlas analysis service (business as usual),2026-11-20
+P02,2,1,2,real,WRI Aqueduct 4.0 via the Water Risk Atlas analysis service (business as usual),2026-11-20
+P03,2,2,2,real,WRI Aqueduct 4.0 via the Water Risk Atlas analysis service (business as usual),2026-11-20
+P04,4,4,4,real,WRI Aqueduct 4.0 via the Water Risk Atlas analysis service (business as usual),2026-11-20
+P05,2,2,3,real,WRI Aqueduct 4.0 via the Water Risk Atlas analysis service (business as usual),2026-11-20
+P06,3,3,3,real,WRI Aqueduct 4.0 via the Water Risk Atlas analysis service (business as usual),2026-11-20
+P07,4,4,4,real,WRI Aqueduct 4.0 via the Water Risk Atlas analysis service (business as usual),2026-11-20
+P08,2,2,2,real,WRI Aqueduct 4.0 via the Water Risk Atlas analysis service (business as usual),2026-11-20
+P09,3,3,3,real,WRI Aqueduct 4.0 via the Water Risk Atlas analysis service (business as usual),2026-11-20
