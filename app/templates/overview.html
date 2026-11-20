@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m with context %}
+{% block title %}Physical exposure{% endblock %}
+{% block main %}
+{% set lead0 = exposures[lead_hz]['today'] %}{% set lead1 = exposures[lead_hz]['2040'] %}
+<h1>What is our business exposure to climate events, today and by 2040?</h1>
+<p class="answer">{{ hazard_names[lead_hz] }} is the widest exposure. Plants rated {{ cutoff_label|lower }} or worse, and the grinding units that run on their clinker, earn <b>{{ lead1.total_cr|cr }}</b>, or <b>{{ lead1.share|pct }}</b> of revenue, by 2040. Today the figure is {{ lead0.total_cr|cr }} ({{ lead0.share|pct }}).</p>
+<p class="answer">{{ chains|length }} kilns supply all {{ n_units }} grinding units, so <b>{{ chain_share|pct }}</b> of revenue depends on those {{ chains|length }} sites staying open.</p>
+
+<h2>Revenue exposed, by hazard</h2>
+<p class="lede">Each bar is the group's FY2025-26 revenue of {{ group.revenue_cr|cr }}, split by the hazard band of the plant that earns it. "Exposed" counts plants rated {{ cutoff_label|lower }} or worse, plus grinding units that depend on clinker from one.</p>
+{{ m.legend() }}
+{% for hz in hazards %}
+<section class="hz" aria-label="{{ hazard_names[hz] }}">
+  <div>
+    <h3>{{ hazard_names[hz] }}</h3>
+    <p>{{ hazard_help[hz] }}</p>
+    <div class="tags">{{ m.hz_src(hz) }} {{ m.asm('A05' if hz == 'heat' else ('A07' if hz == 'rain' else 'A08')) }} {{ m.asm('A10') }}</div>
+  </div>
+  <div>
+    {% for h in horizons %}
+    {% set e = exposures[hz][h] %}
+    <div class="barrow">
+      <span class="when">{{ 'Today' if h == 'today' else '2040' }}</span>
+      <div class="bar" role="img" aria-label="{{ hazard_names[hz] }}, {{ h }}: {{ e.total_cr|cr }} exposed, {{ e.share|pct }} of revenue">
+        {% for s in bars[hz][h] %}<span class="seg {{ 'b' ~ s.band if s.band != 'na' else '' }}" style="flex-grow:{{ s.w }}" title="{{ s.label }}: {{ s.cr|cr }} ({{ s.w|round|int }}% of revenue)"></span>{% endfor %}
+      </div>
+      <span class="fig"><b>{{ e.total_cr|cr }}</b> exposed ({{ e.share|pct }})</span>
+    </div>
+    {% endfor %}
+    {% set e = exposures[hz]['2040'] %}
+    <p class="small">In 2040: {{ e.direct_ids|length }} of {{ group.plants }} plants rated {{ cutoff_label|lower }} or worse ({{ e.direct_cr|cr }}){% if e.indirect_ids %}, plus {{ e.indirect_cr|cr }} at {{ e.indirect_ids|join(', ') }} through clinker supply{% endif %}. Gross block at the directly exposed plants: {{ e.assets_cr|cr }}.</p>
+  </div>
+</section>
+{% endfor %}
+
+<h2>Plant by plant</h2>
+<p class="lede">Two squares show today and 2040. The label is the 2040 band. Plants with the most high ratings in 2040 come first.</p>
+<div class="scroll">
+<table>
+  <thead>
+    <tr><th>Plant</th><th class="num">Revenue</th><th>Extreme heat</th><th>Heavy rain</th><th>Water stress</th><th>Clinker link</th></tr>
+  </thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td><a class="plant" href="/plants/{{ r.plant.id }}">{{ r.plant.town }}</a><span class="sub">{{ r.plant.id }}, {{ r.plant.plant_type|lower }}, {{ r.plant.state }}</span></td>
+      <td class="num">{{ r.plant.revenue_cr|cr }}<span class="sub">{{ (r.plant.revenue_cr / group.revenue_cr)|pct }} of group</span></td>
+      {% for hz in hazards %}<td>{{ m.pair(r.readings[hz]['today'], r.readings[hz]['2040']) }}</td>{% endfor %}
+      <td>{% if r.feeds %}Feeds {% for u in r.feeds %}{{ u.town }}{{ ', ' if not loop.last }}{% endfor %}{% elif r.fed_by %}Runs on clinker from {% for u in r.fed_by %}{{ u.town }}{{ ', ' if not loop.last }}{% endfor %}{% else %}<span class="small">Own kiln, no shipments</span>{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<div class="tags">{{ m.src('Nimbus plant file') }} {% if climate_status == 'real' %}{{ m.src('Open-Meteo, CMIP6') }}{% endif %} {% if water_status == 'real' %}{{ m.src('WRI Aqueduct 4.0') }}{% endif %} {% if any_sample %}{{ m.sample() }}{% endif %} {{ m.asm('A09') }}</div>
+
+<h2>{{ chains|length }} kilns carry {{ chain_share|pct }} of revenue</h2>
+<p class="lede">The grinding units have no kiln. A climate event at the supplying plant reaches them a few days later, when clinker stock runs out.</p>
+{% for c in chains %}
+<div class="chain">
+  <div class="node"><b><a href="/plants/{{ c.kiln.id }}">{{ c.kiln.town }}</a> kiln</b><span>{{ c.kiln.id }}, own revenue {{ c.stake.own_cr|cr }}</span></div>
+  <div class="link" aria-hidden="true"></div>
+  <div>
+    {% for u in c.units %}
+    <div class="node unit"><b><a href="/plants/{{ u.plant.id }}">{{ u.plant.town }}</a> grinding unit</b><span>{{ u.plant.id }}, receives {{ u.mt|num(2) }} Mt clinker, revenue {{ u.plant.revenue_cr|cr }}</span></div>
+    {% endfor %}
+  </div>
+  <div class="stake"><b>{{ c.stake.total_cr|cr }}</b><span>{{ c.stake.share_of_group|pct(1) }} of group revenue rides on this kiln</span></div>
+</div>
+{% endfor %}
+<div class="tags">{{ m.src('Nimbus plant file') }} {{ m.asm('A11') }}</div>
+
+<h2>Not assessed in this version</h2>
+<p class="lede">A blank here is a gap in the tool, not a clean bill of health.</p>
+<ul class="gaps">
+  {% for name, why in not_assessed %}<li><b>{{ name }}</b><span>{{ why }}</span></li>{% endfor %}
+</ul>
+{% endblock %}

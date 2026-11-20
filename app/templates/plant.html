@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m with context %}
+{% block title %}{{ plant.town }}{% endblock %}
+{% block main %}
+<a class="back" href="/">All plants</a>
+<h1 style="margin-top:14px">{{ plant.name }}</h1>
+<p class="answer">{{ plant.plant_type }}{{ ' plant' if plant.has_kiln }} in {{ plant.town }}, {{ plant.state }}.
+{% if stake and stake.downstream_ids %}It also supplies clinker to {% for u, mt in feeds %}{{ u.town }}{{ ' and ' if not loop.last }}{% endfor %}, so <b>{{ stake.total_cr|cr }}</b> of revenue ({{ stake.share_of_group|pct(1) }} of the group) depends on this kiln.
+{% elif fed_by %}It has no kiln and runs on clinker from {% for u, share in fed_by %}{{ u.town }}{{ ' and ' if not loop.last }}{% endfor %}, so a stoppage there stops this unit too.
+{% else %}It makes and uses its own clinker.{% endif %}</p>
+
+<div class="facts">
+  <div><span>Revenue, FY2025-26</span><b>{{ plant.revenue_cr|cr }}</b></div>
+  <div><span>Gross block</span><b>{{ plant.asset_value_cr|cr }}</b></div>
+  <div><span>Cement output</span><b>{{ plant.cement_mt|num(2) }} Mt</b></div>
+  <div><span>Capacity used</span><b>{{ (plant.cement_mt / plant.capacity_mtpa)|pct }}</b></div>
+  <div><span>Employees</span><b>{{ plant.employees|num }}</b></div>
+  <div><span>Water source</span><b>{{ plant.water_source }}</b></div>
+</div>
+<div class="tags">{{ m.src('Nimbus plant file') }}</div>
+{% if plant.notes %}<p class="small">Plant file note: {{ plant.notes }}</p>{% endif %}
+
+<h2>Extreme heat</h2>
+<p class="lede">Days a year with a maximum of {{ heat_threshold }} °C or more, the weather service's heat-wave threshold for {{ 'coastal stations' if plant.coastal else 'the plains' }}. Rated <b>{{ readings.heat['today'].label|lower }}</b> today and <b>{{ readings.heat['2040'].label|lower }}</b> in 2040.</p>
+{{ m.plot(plots.heat, 'Hot days a year, today and 2040, with the range across climate models') }}
+<p class="small">Dot: middle of the climate models. Line: lowest to highest model. Dashed lines: band edges.</p>
+<div class="tags">{{ m.hz_src('heat') }} {{ m.asm('A03' if not plant.coastal else 'A04') }} {{ m.asm('A05') }} {{ m.asm('A01') }} {{ m.asm('A02') }}</div>
+
+<h2>Heavy rain</h2>
+<p class="lede">Days a year with {{ assumptions.A06.value }} mm or more. Rated <b>{{ readings.rain['today'].label|lower }}</b> today and <b>{{ readings.rain['2040'].label|lower }}</b> in 2040. The wettest day of an average year goes from {{ rx['today'].median|num }} mm to {{ rx['2040'].median|num }} mm ({{ '%+.0f'|format(rx_change * 100) }}%).</p>
+{{ m.plot(plots.rain, 'Heavy-rain days a year, today and 2040, with the range across climate models') }}
+<p class="small">Climate models average rain over a grid cell, so they understate downpours at a single site. Read the change, not the absolute count. This is not a flood map.</p>
+<div class="tags">{{ m.hz_src('rain') }} {{ m.asm('A06') }} {{ m.asm('A07') }}</div>
+
+<h2>Water stress</h2>
+<p class="lede">Rated <b>{{ readings.water['today'].label|lower }}</b> today and <b>{{ readings.water['2040'].label|lower }}</b> in 2040.{% if readings.water['today'].note %} {{ readings.water['today'].note }}.{% endif %}</p>
+<div class="scroll">
+<table style="max-width:640px">
+  <thead><tr><th>Local basin, Aqueduct</th><th>Baseline</th><th>2030</th><th>2050</th></tr></thead>
+  <tbody><tr>
+    <td>Business as usual</td>
+    {% for k in ('baseline_cat', 'bau30_cat', 'bau50_cat') %}<td>{{ m.sw(aqueduct[k] if aqueduct[k] >= 0 else none) }}{{ aq_labels[k] }}</td>{% endfor %}
+  </tr></tbody>
+</table>
+</div>
+<div class="tags">{{ m.hz_src('water') }} {{ m.asm('A08') }}{% if plant.desalinated %} {{ m.asm('A09') }}{% endif %}</div>
+
+<h2>Carbon</h2>
+<div class="two">
+  <div>
+    <p>Reported Scope 1: <b>{{ emissions.reported_kt|num }} kt CO2</b>.{% if plant.clinker_shipped_mt > 0 %} That includes {{ plant.clinker_shipped_mt|num(2) }} Mt of clinker shipped to other units.{% endif %}</p>
+    <p>After moving shipped-clinker emissions to the plant that grinds it: <b>{{ emissions.allocated_kt|num }} kt</b>, or <b>{{ emissions.allocated_kg_per_t|num }} kg per tonne of cement</b>.</p>
+  </div>
+  <div>
+    <p>Clinker per tonne of cement: <b>{{ emissions.clinker_factor|num(2) }}</b>.</p>
+    {% if emissions.clinker_ef_kg_per_t %}<p>Kiln emissions: {{ emissions.clinker_ef_kg_per_t|num }} kg CO2 per tonne of clinker.</p>{% endif %}
+    <p><a href="/carbon">See what a carbon price would cost</a></p>
+  </div>
+</div>
+<div class="tags">{{ m.src('Nimbus plant file') }} {{ m.asm('A16') }}</div>
+
+<h2>Other plants</h2>
+<p>{% for p in all_plants if p.id != plant.id %}<a href="/plants/{{ p.id }}">{{ p.town }}</a>{{ ', ' if not loop.last }}{% endfor %}</p>
+{% endblock %}

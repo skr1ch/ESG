@@ -1,0 +1,49 @@
+{# Provenance tags: every figure on a page traces to a dataset, an assumption, or is flagged as sample. #}
+{% macro src(label) %}<span class="tag" title="Read from a dataset, not adjusted">{{ label }}</span>{% endmacro %}
+
+{% macro asm(id) %}<a class="tag tag-asm" href="/method#{{ id }}" title="{{ assumptions[id].name }}">Assumption {{ id }}</a>{% endmacro %}
+
+{% macro sample() %}<span class="tag tag-sample" title="Placeholder values, not model output">Sample data</span>{% endmacro %}
+
+{% macro hz_src(hz) %}
+{% if hz == 'water' %}{% if water_status == 'real' %}{{ src('WRI Aqueduct 4.0') }}{% else %}{{ sample() }}{% endif %}
+{% else %}{% if climate_status == 'real' %}{{ src('Open-Meteo, CMIP6') }}{% else %}{{ sample() }}{% endif %}{% endif %}
+{% endmacro %}
+
+{% macro sw(band) %}<span class="sw {{ 'b' ~ band if band is not none else '' }}" aria-hidden="true"></span>{% endmacro %}
+
+{% macro chip(reading) %}{{ sw(reading.band) }}{{ reading.label }}{% endmacro %}
+
+{# today -> 2040 as two swatches; the 2040 label is written out, the earlier band only when it differs #}
+{% macro pair(t0, t1) %}
+<span class="pair" title="Today: {{ t0.label }}. 2040: {{ t1.label }}.">{{ sw(t0.band) }}<span class="to" aria-hidden="true">›</span>{{ sw(t1.band) }}<span class="lbl">{{ t1.label }}</span></span>
+{% if t0.band != t1.band %}<span class="was">today {{ t0.label|lower }}</span>{% endif %}
+{% endmacro %}
+
+{% macro legend() %}
+<ul class="legend" aria-label="Hazard bands, lowest to highest">
+  {% for l in band_labels %}<li>{{ sw(loop.index0) }}{{ l }}</li>{% endfor %}
+</ul>
+{% endmacro %}
+
+{% macro plot(p, label) %}
+<svg class="plot" viewBox="0 0 {{ p.width }} {{ p.height }}" role="img" aria-label="{{ label }}">
+  <line class="axis" x1="{{ p.x0 }}" x2="{{ p.x1 }}" y1="84" y2="84"/>
+  <text x="{{ p.x0 }}" y="102" text-anchor="middle">0</text>
+  <text x="{{ p.x1 }}" y="102" text-anchor="middle">{{ p.axis_max_label }}</text>
+  {% for e in p.edges %}
+  <line class="edge" x1="{{ e.x }}" x2="{{ e.x }}" y1="12" y2="84"/>
+  <text x="{{ e.x }}" y="102" text-anchor="middle">{{ e.label }}</text>
+  {% endfor %}
+  {% for r in p.rows %}
+  <g class="{{ r.cls }}">
+    <title>{{ r.tip }}</title>
+    <text class="rowlbl" x="0" y="{{ r.y + 4 }}">{{ r.label }}</text>
+    <rect x="{{ p.x0 }}" y="{{ r.y - 12 }}" width="{{ p.x1 - p.x0 }}" height="24" fill="transparent"/>
+    <line class="wh" x1="{{ r.x_lo }}" x2="{{ r.x_hi }}" y1="{{ r.y }}" y2="{{ r.y }}"/>
+    <circle cx="{{ r.x_med }}" cy="{{ r.y }}" r="6"/>
+    <text class="val" x="{{ r.x_hi + 10 }}" y="{{ r.y + 4 }}">{{ r.text }}</text>
+  </g>
+  {% endfor %}
+</svg>
+{% endmacro %}

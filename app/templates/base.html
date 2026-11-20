@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Climate exposure register{% endblock %} | Nimbus Cement</title>
+<meta name="description" content="Where Nimbus Cement's revenue sits against extreme heat, heavy rain, water stress and a carbon price, today and in 2040.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23172048'/%3E%3Crect x='3' y='9' width='10' height='3' fill='%232c7a4b'/%3E%3C/svg%3E">
+<style>
+{% include "_styles.css" %}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <a class="brand" href="/">Nimbus Cement <span>climate exposure register</span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="/" {% if active == 'overview' %}aria-current="page"{% endif %}>Physical exposure</a>
+      <a href="/carbon" {% if active == 'carbon' %}aria-current="page"{% endif %}>Carbon cost</a>
+      <a href="/method" {% if active == 'method' %}aria-current="page"{% endif %}>Method and assumptions</a>
+    </nav>
+  </div>
+</header>
+{% if any_sample %}
+<div class="flag" role="note">
+  <div class="wrap"><strong>Sample hazard data.</strong>
+  {% if climate_status == 'sample' and water_status == 'sample' %}The heat, rain and water-stress ratings{% elif climate_status == 'sample' %}The heat and rain ratings{% else %}The water-stress ratings{% endif %}
+  are placeholders until the data pipeline has been run. Plant, revenue and emissions figures come from the Nimbus plant file. <a href="/method#data">See data status</a></div>
+</div>
+{% endif %}
+<main class="wrap">
+{% block main %}{% endblock %}
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <p>Plant data: Nimbus plant file, FY2025-26. Climate: {{ meta.source if climate_status == 'real' else 'sample values' }}. Water: {{ 'WRI Aqueduct 4.0' if water_status == 'real' else 'sample values' }}.</p>
+    <p>Version 1 prototype. Nimbus Cement Ltd is fictional and its plant data is invented. This register shows exposure; it is not a forecast of losses or investment advice.</p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m with context %}
+{% block title %}Carbon cost{% endblock %}
+{% block main %}
+<h1>What would a carbon price cost us if we changed nothing?</h1>
+<p class="answer">At ₹{{ price|num }} a tonne, the {{ 'FY2026-27' if horizon == 'today' else '2040' }} gap to target would cost <b>{{ cost.cost_cr|cr }} a year</b>, or <b>{{ cost.pct_revenue|pct(1) }}</b> of FY2025-26 revenue. That prices {{ cost.gap|pct }} of today's emissions: the share left above an intensity target that tightens {{ rate|pct }} a year for {{ years }} year{{ 's' if years != 1 }}.</p>
+
+<div class="controls">
+  <div class="grp"><span>Year</span>
+    <div class="opts">
+      <a class="opt" href="/carbon?horizon=today" {% if horizon == 'today' %}aria-current="true"{% endif %}>FY2026-27</a>
+      <a class="opt" href="/carbon?horizon=2040" {% if horizon == '2040' %}aria-current="true"{% endif %}>2040</a>
+    </div>
+  </div>
+  <div class="grp"><span>Carbon price, rupees a tonne of CO2</span>
+    <div class="opts">
+      {% for label, p in presets %}<a class="opt" href="/carbon?horizon={{ horizon }}&amp;price={{ p }}" {% if p == price %}aria-current="true"{% endif %}>{{ label }}: ₹{{ p|num }}</a>{% endfor %}
+    </div>
+  </div>
+  <form class="grp" method="get" action="/carbon">
+    <label for="price"><span class="small">Or set your own</span></label>
+    <div class="opts">
+      <input type="hidden" name="horizon" value="{{ horizon }}">
+      <input id="price" type="number" name="price" min="0" max="{{ price_max }}" step="50" value="{{ price }}">
+      <button type="submit">Recalculate</button>
+    </div>
+  </form>
+</div>
+<div class="tags">{{ m.asm('A12') }} {{ m.asm('A13') }} {{ m.asm('A14' if horizon == 'today' else 'A15') }} {{ m.asm('A17') }}</div>
+
+<div class="panel">
+  <p><b>Ceiling: {{ cost.gross_cost_cr|cr }} ({{ cost.gross_pct_revenue|pct(1) }} of revenue)</b> if every Scope 1 tonne were priced.</p>
+  <p class="small">India's Carbon Credit Trading Scheme sets an emissions-intensity target per plant and prices only the tonnes above it, so the ceiling is not the bill. Beating the target earns credits instead.</p>
+</div>
+
+<h2>Where the cost lands</h2>
+<p class="lede">Emissions are counted at the plant that grinds the clinker into cement, not the plant that reports them. Group average: {{ group_kg_per_t|num }} kg CO2 per tonne of cement.</p>
+<div class="scroll">
+<table>
+  <thead><tr><th>Plant</th><th class="num">Scope 1 as reported</th><th class="num">After clinker allocation</th><th class="num">kg CO2 per tonne of cement</th><th class="num">Cost a year</th><th>Share of cost</th><th class="num">Of plant revenue</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td><a class="plant" href="/plants/{{ r.plant.id }}">{{ r.plant.town }}</a><span class="sub">{{ r.plant.id }}, {{ r.plant.plant_type|lower }}</span></td>
+      <td class="num">{{ r.em.reported_kt|num }} kt</td>
+      <td class="num">{{ r.em.allocated_kt|num }} kt</td>
+      <td class="num">{{ r.em.allocated_kg_per_t|num }}<span class="sub">unallocated: {{ r.em.naive_kg_per_t|num }}</span></td>
+      <td class="num"><b>{{ r.row.cost_cr|cr }}</b></td>
+      <td class="barcell"><div class="hbar" style="width:{{ r.w }}%" title="{{ r.plant.town }}: {{ r.row.cost_cr|cr }} a year"></div></td>
+      <td class="num">{{ r.row.pct_revenue|pct(1) }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<div class="tags">{{ m.src('Nimbus plant file') }} {{ m.asm('A16') }}</div>
+
+<h2>What this leaves out</h2>
+<ul class="gaps">
+  <li><b>Purchased electricity</b><span>The scheme covers it, the plant file does not. Grinding units are understated.</span></li>
+  <li><b>Plant-specific targets</b><span>Real targets are notified per plant from a FY2023-24 baseline. A flat {{ rate|pct }} a year stands in.</span></li>
+  <li><b>Abatement</b><span>Lower clinker ratio, alternative fuels and waste heat would cut the gap. No abatement is assumed.</span></li>
+  <li><b>Cost pass-through and demand</b><span>No view on how much of the cost customers would bear, or on demand for low-carbon cement.</span></li>
+</ul>
+{% endblock %}

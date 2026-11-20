@@ -1,0 +1,128 @@
+# Every number in the product that does not come straight from a dataset lives here.
+# kind: "assumption" = our judgement, to be challenged; "sourced" = taken from a published rule.
+# The Method page renders this file; scripts/verify.py fails if code uses an id that is missing.
+version: 1
+assumptions:
+  A01:
+    name: "Climate window for 'today'"
+    value: [2006, 2025]
+    unit: years
+    kind: assumption
+    used_in: physical
+    rationale: "A 20-year average smooths single hot or wet years. 2006-2025 is the most recent 20 years."
+  A02:
+    name: "Climate window for '2040'"
+    value: [2030, 2049]
+    unit: years
+    kind: assumption
+    used_in: physical
+    rationale: "20 years centred on 2040. The Open-Meteo Climate API stops at 2050-01-01, so 2049 is the last full year."
+  A03:
+    name: "Hot-day threshold, inland plants"
+    value: 40
+    unit: "deg C daily maximum"
+    kind: sourced
+    used_in: physical
+    source: "India Meteorological Department heat-wave criterion for plains"
+    rationale: "Uses the national weather service's own definition so the number is recognisable to an Indian board."
+  A04:
+    name: "Hot-day threshold, coastal plants"
+    value: 37
+    unit: "deg C daily maximum"
+    kind: sourced
+    used_in: physical
+    source: "India Meteorological Department heat-wave criterion for coastal stations"
+    rationale: "Humid coastal sites become unsafe for outdoor work at lower air temperatures."
+  A05:
+    name: "Heat bands (hot days a year)"
+    value: [10, 30, 60, 90]
+    unit: "days per year"
+    kind: assumption
+    used_in: physical
+    rationale: "Band edges are ours: under 10 days is Low, 90 or more (a full quarter) is Extremely high. Replace with site HSE limits when available."
+  A06:
+    name: "Heavy-rain day threshold"
+    value: 64.5
+    unit: "mm in 24 hours"
+    kind: sourced
+    used_in: physical
+    source: "India Meteorological Department 'heavy rainfall' category (64.5-115.5 mm)"
+    rationale: "National definition. Climate-model grid cells understate point rainfall, so this is a proxy for flood-prone days, not a flood model."
+  A07:
+    name: "Heavy-rain bands (heavy-rain days a year)"
+    value: [1, 3, 6, 10]
+    unit: "days per year"
+    kind: assumption
+    used_in: physical
+    rationale: "Band edges are ours. They rank plants against each other; they do not predict inundation."
+  A08:
+    name: "Water stress in 2040"
+    value: "worse of 2030 and 2050"
+    unit: "Aqueduct category"
+    kind: assumption
+    used_in: physical
+    rationale: "Aqueduct publishes 2030 and 2050 only. We take the worse of the two business-as-usual values instead of inventing a 2040 figure."
+  A09:
+    name: "Desalinated supply is decoupled from basin stress"
+    value: 0
+    unit: "band"
+    kind: assumption
+    used_in: physical
+    rationale: "A plant on desalinated seawater does not draw on the stressed basin, so it is rated Low. Its exposure moves to energy cost, which v1 does not model."
+  A10:
+    name: "Band counted as 'exposed'"
+    value: 3
+    unit: "band (High or worse)"
+    kind: assumption
+    used_in: physical
+    rationale: "Revenue is counted as exposed when the plant is rated High or Extremely high."
+  A11:
+    name: "Grinding units have no alternative clinker source"
+    value: 1.0
+    unit: "share of dependency"
+    kind: assumption
+    used_in: physical
+    rationale: "No buffer stock and no third-party clinker are assumed, so a grinding unit's revenue depends fully on its supplying kiln. This overstates dependency where stock or swaps exist."
+  A12:
+    name: "Annual tightening of the CCTS intensity target"
+    value: 0.02
+    unit: "fraction per year"
+    kind: assumption
+    used_in: transition
+    rationale: "Plant-level targets exist only for real obligated entities. 2% a year is a placeholder trajectory; replace with the notified targets."
+  A13:
+    name: "No abatement"
+    value: "FY2025-26 intensity held to 2040"
+    unit: "-"
+    kind: assumption
+    used_in: transition
+    rationale: "Shows the do-nothing cost, which is the question a board asks first. Any abatement lowers it."
+  A14:
+    name: "Carbon price today"
+    value: 600
+    unit: "INR per tonne CO2"
+    kind: assumption
+    used_in: transition
+    source: "Midpoint of published pre-launch estimates of Rs 400-900 for the first CCTS cycle"
+    rationale: "No Carbon Credit Certificate had traded when this was built (checked October 2026 sources)."
+  A15:
+    name: "Carbon price paths for 2040"
+    value: {low: 1000, central: 2500, high: 5000}
+    unit: "INR per tonne CO2"
+    kind: assumption
+    used_in: transition
+    rationale: "Illustrative. NGFS scenario prices need a registered account; replace these once pulled."
+  A16:
+    name: "Emissions carried by shipped clinker"
+    value: "source plant's average kg CO2 per tonne of clinker"
+    unit: "-"
+    kind: assumption
+    used_in: transition
+    rationale: "Reported Scope 1 includes clinker shipped out. We move those emissions to the receiving grinding unit at the kiln's average factor (which includes captive power at P01)."
+  A17:
+    name: "Years of target tightening applied"
+    value: {today: 1, "2040": 15}
+    unit: years
+    kind: assumption
+    used_in: transition
+    rationale: "Counted from the FY2025-26 data year: FY2026-27 is one year on, FY2040-41 is fifteen."

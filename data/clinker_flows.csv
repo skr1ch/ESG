@@ -1,0 +1,4 @@
+from_plant,to_plant,clinker_mt
+P01,P07,1.12
+P06,P08,0.68
+P06,P09,0.60

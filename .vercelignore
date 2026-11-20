@@ -1,0 +1,7 @@
+tests/
+docs/
+dist/
+data/raw/
+.github/
+.pytest_cache/
+requirements-dev.txt

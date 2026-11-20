@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Not found{% endblock %}
+{% block main %}
+<h1>{{ what }} is not in this register</h1>
+<p class="answer">The register covers nine plants. Pick one, or go back to the <a href="/">overview</a>.</p>
+<p>{% for p in all_plants %}<a href="/plants/{{ p.id }}">{{ p.town }} ({{ p.id }})</a>{{ ', ' if not loop.last }}{% endfor %}</p>
+{% endblock %}

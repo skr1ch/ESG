@@ -1,0 +1,10 @@
+plant_id,plant_name,town,state,latitude,longitude,plant_type,cement_capacity_mtpa,cement_output_fy2025_26_mt,clinker_produced_fy2025_26_mt,clinker_shipped_fy2025_26_mt,scope1_co2_fy2025_26_kt,water_source,coastal,asset_value_inr_cr,revenue_fy2025_26_inr_cr,employees,notes
+P01,Nimbus Chittorgarh Works,Chittorgarh,Rajasthan,24.8887,74.6269,Integrated,4,3.3,3.43,1.12,3125,Groundwater,N,3200,1749,820,Captive limestone mine; 40 MW captive coal power plant (its emissions are in scope1); ships clinker to P07 by rail
+P02,Nimbus Satna Works,Satna,Madhya Pradesh,24.6005,80.8322,Integrated,3.5,2.85,2.05,0,1720,Reservoir,N,2700,1511,760,Captive limestone mine
+P03,Nimbus Chandrapur Works,Chandrapur,Maharashtra,19.9615,79.2961,Integrated,3,2.4,1.78,0,1510,River (Wardha),N,2300,1248,690,30 MW waste-heat recovery system
+P04,Nimbus Nalgonda Works,Nalgonda,Telangana,17.0575,79.2671,Integrated,2.5,1.85,1.22,0,1025,Groundwater,N,1800,999,540,
+P05,Nimbus Ariyalur Works,Ariyalur,Tamil Nadu,11.1401,79.0786,Integrated,2,1.55,1.12,0,1005,Groundwater,N,1500,868,480,Oldest kiln (1998)
+P06,Nimbus Baloda Bazar Works,Baloda Bazar,Chhattisgarh,21.6566,82.1606,Integrated,3,2.55,3.01,1.28,2470,Canal (Mahanadi system),N,2350,1275,700,Newest kiln (2022); ships clinker to P08 (0.68 Mt) and P09 (0.60 Mt)
+P07,Nimbus Mundra Grinding Unit,Mundra,Gujarat,22.839,69.7219,Grinding unit,2,1.6,0,0,32,Desalinated seawater,Y,650,848,210,Gets 1.12 Mt clinker a year from P01 by rail
+P08,Nimbus Paradip Grinding Unit,Paradip,Odisha,20.3165,86.6114,Grinding unit,1.5,1.05,0,0,21,Municipal supply,Y,480,536,180,Gets 0.68 Mt clinker a year from P06; blends fly ash from nearby power plants
+P09,Nimbus Durgapur Grinding Unit,Durgapur,West Bengal,23.5204,87.3119,Grinding unit,1.5,1.2,0,0,24,River (Damodar),N,470,624,170,Gets 0.60 Mt clinker a year from P06; makes slag cement with steel slag
